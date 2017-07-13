@@ -269,9 +269,17 @@ export default class extends CardStack {
     });
 
     const { options } = this._getScreenDetails(scene);
-    const gesturesEnabled = typeof options.gesturesEnabled === 'boolean'
-      ? options.gesturesEnabled
-      : Platform.OS === 'ios';
+    let gesturesEnabled = false;
+
+    // Only the top most navigator can set handlers
+    if (scene.isActive) {
+      const { route } = scene;
+      if (!route.routes || route.index === 0) {
+        gesturesEnabled = typeof options.gesturesEnabled === 'boolean'
+          ? options.gesturesEnabled
+          : Platform.OS === 'ios';
+      }
+    }
 
     const handlers = gesturesEnabled ? responder.panHandlers : {};
 
