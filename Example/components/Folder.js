@@ -16,9 +16,12 @@ export default class extends Component {
     };
   };
 
+  static screenKey = (routeName, params) => `${routeName}/${params.guid}`;
+
   render() {
     const { navigation } = this.props;
     const { guid } = navigation.state.params;
+
     return (
       <View style={styles.container}>
         <Button

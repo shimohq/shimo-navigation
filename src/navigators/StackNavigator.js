@@ -2,8 +2,8 @@ import React from 'react';
 import { createNavigator, createNavigationContainer } from 'react-navigation';
 import NavigatorTypes from 'react-navigation/src/navigators/NavigatorTypes';
 
-import StackRouter from './StackRouter';
-import CardStackTransitioner from './views/CardStackTransitioner';
+import StackRouter from '../routers/StackRouter';
+import CardStackTransitioner from '../views/CardStackTransitioner';
 
 export default (
   routeConfigMap,

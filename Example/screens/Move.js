@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
-import StackNavigator from '../navigators/StackNavigator';
+import { View, StyleSheet, Button } from 'react-native';
+import { StackNavigator } from 'shimo-navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -32,8 +32,6 @@ class Move extends Component {
     const { navigation } = this.props;
     const { guid } = navigation.state.params;
 
-    console.log(this.props);
-
     return (
       <View style={styles.container}>
         <Button
@@ -49,13 +47,16 @@ class Move extends Component {
   }
 }
 
-
-
-
-export default StackNavigator({
+const MoveNavigator = StackNavigator({
   '/move/list': {
     screen: Move
   }
 }, {
   mode: 'card'
 });
+
+MoveNavigator.navigationOptions = {
+  header: null
+};
+
+export default MoveNavigator;

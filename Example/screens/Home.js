@@ -1,6 +1,4 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import TabNavigator from '../navigators/TabNavigator';
+import { TabNavigator } from 'shimo-navigation';
 
 export default TabNavigator({
   notification: {

@@ -1,23 +1,19 @@
 {
-  "name": "navigators",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
-  },
-  "dependencies": {
-    "react": "16.0.0-alpha.12",
-    "react-native": "0.46.1",
-    "react-navigation": "^1.0.0-beta.11"
-  },
-  "devDependencies": {
-    "babel-jest": "20.0.3",
-    "babel-preset-react-native": "2.1.0",
-    "jest": "20.0.4",
-    "react-test-renderer": "16.0.0-alpha.12"
-  },
-  "jest": {
-    "preset": "react-native"
-  }
+    "name": "shimo-navigation",
+    "version": "0.0.1",
+    "main": "./src/react-navigation",
+    "description": "石墨文档 React Native App 导航系统(based on react-navigation)",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/shimohq/shimo-navigation"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "react-navigation": "^1.0.0-beta.11"
+    },
+    "keywords": [
+        "react-component",
+        "react-native",
+        "react-navigation"
+    ]
 }

@@ -38,6 +38,7 @@ function isSceneNotStale(scene) {
 
 export default class extends Transitioner {
   _startTransition(nextProps, nextScenes, indexHasChanged) {
+
     const nextState = {
       ...this.state,
       scenes: nextScenes
@@ -48,11 +49,19 @@ export default class extends Transitioner {
     const nextNavigationState = nextProps.navigation.state;
     const shouldPerformTransition = currentNavigationState.routes[currentNavigationState.index].key !== nextNavigationState.routes[nextNavigationState.index].key;
 
+    // if (!shouldPerformTransition) {
+    //   console.log(currentNavigationState, nextNavigationState, 9999999);
+    // }
+    //
+    //
+    // super._startTransition(nextProps, nextScenes, indexHasChanged);
+    // return;
+
     /**
      * disable reset transition if active card is not changed.
      */
 
-    if (!shouldPerformTransition) {
+    if (!shouldPerformTransition && !this._isTransitionRunning) {
       progress.setValue(0);
 
       this._prevTransitionProps = this._transitionProps;
@@ -64,6 +73,7 @@ export default class extends Transitioner {
       this.setState(nextState, () => {
         position.setValue(nextNavigationState.index);
         progress.setValue(1);
+        this._queuedTransition = null;
       });
     } else {
       super._startTransition(nextProps, nextScenes, indexHasChanged);
