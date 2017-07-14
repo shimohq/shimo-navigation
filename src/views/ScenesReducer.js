@@ -103,7 +103,7 @@ export default function ScenesReducer(
       isActive: false,
       isStale: false,
       key,
-      route,
+      route
     };
     invariant(
       !nextKeys.has(key),
@@ -132,7 +132,7 @@ export default function ScenesReducer(
         isActive: false,
         isStale: true,
         key,
-        route,
+        route
       });
     });
   }
@@ -146,7 +146,10 @@ export default function ScenesReducer(
       // Reuse `prevScene` as `scene` so view can avoid unnecessary re-render.
       // This assumes that the scene's navigation state is immutable.
       nextScenes.push(prevScene);
-    } else {
+
+    // modify:#10 start
+    } else if (nextKeys.has(key) || (!prevState || SCENE_KEY_PREFIX + prevState.routes[prevState.index].key === key)) {
+    // modify:#10 end
       nextScenes.push(nextScene);
     }
   };
@@ -162,7 +165,7 @@ export default function ScenesReducer(
     if (isActive !== scene.isActive) {
       nextScenes[ii] = {
         ...scene,
-        isActive,
+        isActive
       };
     }
     if (isActive) {
@@ -173,7 +176,7 @@ export default function ScenesReducer(
   invariant(
     activeScenesCount === 1,
     'there should always be only one scene active, not %s.',
-    activeScenesCount
+    activeScenesCount,
   );
 
   if (nextScenes.length !== scenes.length) {

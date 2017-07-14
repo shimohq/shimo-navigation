@@ -8,21 +8,21 @@
 基于 react-navigation 的修改内容记录：
 
 ### StackRouter:
-1. 修改了 route.key 的生成规则，由之前随机生成 uuid 改为:通过 Screen.screenKey 的静态方法生成 key ，或取 routeName 作为 key(方便 goBack 指定参数)
-2. 禁止了具有相同 key 的 navigate 操作
+1. 修改了 route.key 的生成规则，由之前随机生成 uuid 改为:通过 Screen.screenKey 的静态方法生成 key ，或取 routeName 作为 key(方便 goBack 指定参数) #1
+2. 禁止了具有相同 key 的 navigate 操作 #2
 
 ### StackNavigator:
-1. navigator 的 dispatch 方法里面 nav state 的设置改为同步读写
+1. navigator 的 dispatch 方法里面 nav state 的设置改为同步读写 #3
 
 ### Transitioner:
-1. _startTransition 在进行 reset 操作的时候禁止了不必要的动画
+1. _startTransition 在进行 reset 操作的时候禁止了不必要的动画 #4
 
 ### CardStackTransitioner:
-1. _render 渲染场景的时候获取 transition blur 与 focus 的路由名，并传入 CardStack 的 transitionTargets prop 中
+1. _render 渲染场景的时候获取 transition blur 与 focus 的路由名，并传入 CardStack 的 transitionTargets prop 中 #5
 
 ### CardStack:
-1. 只有最顶层的 navigator 才支持手势
-2. 拓展了传入 screen 的 navigation prop 结构
+1. 只有最顶层的 navigator 才支持手势 #6
+2. 拓展了传入 screen 的 navigation prop 结构 #7
 ```
 {
     ...navigation,
@@ -38,8 +38,8 @@
 }
 ```
 
-3. 支持在 screen navigation options 内指定当前 screen 的 mode
-4. 支持在 screen navigation options 内指定当前 screen 的 gesturesEnabled
+3. 支持在 screen navigation options 内指定当前 screen 的 mode #8
+4. 支持在 screen navigation options 内指定当前 screen 的 gesturesEnabled #9
 
 ```
 class SomeScreen extends Component {
@@ -49,3 +49,6 @@ class SomeScreen extends Component {
   };
 }
 ```
+
+### ScenesReducers
+1. 修复 reset 生成的 scenes 错误  #10
