@@ -64,7 +64,7 @@ export default class extends CardStack {
 
     this.state = {
       isResponding: false
-    }
+    };
   }
 
   _renderInnerScene(SceneComponent, scene) {

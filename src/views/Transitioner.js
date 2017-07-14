@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Transitioner } from 'react-navigation';
 
+import NavigationScenesReducer from './ScenesReducer';
 
 const styles = StyleSheet.create({
   main: {
@@ -37,8 +38,31 @@ function isSceneNotStale(scene) {
 }
 
 export default class extends Transitioner {
-  _startTransition(nextProps, nextScenes, indexHasChanged) {
 
+  componentWillReceiveProps(nextProps: Props): void {
+    const nextScenes = NavigationScenesReducer(
+      this.state.scenes,
+      nextProps.navigation.state,
+      this.props.navigation.state
+    );
+
+
+    if (nextScenes === this.state.scenes) {
+      return;
+    }
+
+    const indexHasChanged =
+      nextProps.navigation.state.index !== this.props.navigation.state.index;
+    if (this._isTransitionRunning) {
+      this._queuedTransition = { nextProps, nextScenes, indexHasChanged };
+      return;
+    }
+
+
+    this._startTransition(nextProps, nextScenes, indexHasChanged);
+  }
+  
+  _startTransition(nextProps, nextScenes, indexHasChanged) {
     const nextState = {
       ...this.state,
       scenes: nextScenes
@@ -48,14 +72,6 @@ export default class extends Transitioner {
     const currentNavigationState = this.props.navigation.state;
     const nextNavigationState = nextProps.navigation.state;
     const shouldPerformTransition = currentNavigationState.routes[currentNavigationState.index].key !== nextNavigationState.routes[nextNavigationState.index].key;
-
-    // if (!shouldPerformTransition) {
-    //   console.log(currentNavigationState, nextNavigationState, 9999999);
-    // }
-    //
-    //
-    // super._startTransition(nextProps, nextScenes, indexHasChanged);
-    // return;
 
     /**
      * disable reset transition if active card is not changed.
