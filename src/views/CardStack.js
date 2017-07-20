@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform, StyleSheet, View, PanResponder, I18nManager } from 'react-native';
-import { Card } from 'react-navigation';
+import { Card, addNavigationHelpers } from 'react-navigation';
 import CardStack from 'react-navigation/src/views/CardStack';
 import SceneView from 'react-navigation/src/views/SceneView';
 import TransitionConfigs from 'react-navigation/src/views/TransitionConfigs';
@@ -67,43 +67,38 @@ export default class extends CardStack {
     };
   }
 
-  _renderInnerScene(SceneComponent, scene) {
-    const { navigation } = this._getScreenDetails(scene);
-    const { screenProps, position, progress, transitionTargets } = this.props;
-    const headerMode = this._getHeaderMode();
+  _getScreenDetails = (scene) => {
+    const { screenProps, navigation, position, progress, router, transitionTargets } = this.props;
+    let screenDetails = this._screenDetails[scene.key];
 
     const [blurFrom, focusInto] = transitionTargets;
 
-    const sceneView = (
-      <SceneView
-        screenProps={screenProps}
-        navigation={{
-          ...navigation,
-          position,
-          progress,
-          status: {
-            isActive: scene.isActive,
-            isStale: scene.isStale,
-            isResponding: scene.isActive ? this.state.isResponding : false,
-            isFocusing: focusInto === navigation.state.key,
-            isBlurring: blurFrom === navigation.state.key
-          }
-        }}
-        component={SceneComponent}
-      />
-    );
+    if (!screenDetails || screenDetails.state !== scene.route) {
+      const screenNavigation = addNavigationHelpers({
+        ...navigation,
+        state: scene.route,
+        position,
+        progress,
+        index: scene.index
+      });
 
-    if (headerMode === 'screen') {
-      return (
-        <View style={styles.container}>
-          <View style={styles.scenes}>
-            {sceneView}
-          </View>
-          {this._renderHeader(scene, headerMode)}
-        </View>
-      );
+      screenDetails = {
+        state: scene.route,
+        navigation: screenNavigation,
+        options: router.getScreenOptions(screenNavigation, screenProps)
+      };
+      this._screenDetails[scene.key] = screenDetails;
     }
-    return sceneView;
+
+    screenDetails.navigation.status = {
+      isActive: scene.isActive,
+      isStale: scene.isStale,
+      isResponding: scene.isActive ? this.state.isResponding : false,
+      isFocusing: focusInto === navigation.state.key,
+      isBlurring: blurFrom === navigation.state.key
+    };
+
+    return screenDetails;
   }
 
   _getSceneMode(key) {

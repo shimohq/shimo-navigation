@@ -23,7 +23,7 @@ module.exports = {
     return require('./navigators/StackNavigator').default;
   },
   get TabNavigator() {
-    return reactNavigation.TabNavigator;
+    return require('./navigators/TabNavigator').default;
   },
   get DrawerNavigator() {
     return reactNavigation.DrawerNavigator;
@@ -34,7 +34,7 @@ module.exports = {
     return require('./routers/StackRouter').default;
   },
   get TabRouter() {
-    return reactNavigation.TabRouter;
+    return require('./routers/TabRouter').default;
   },
 
   // Views

@@ -1,4 +1,5 @@
 import { StackRouter, NavigationActions } from 'react-navigation';
+import createConfigGetter from './createConfigGetter';
 
 function getScreenKey(router, routeName, params) {
   const RouteComponent = router.getComponentForRouteName(routeName);
@@ -48,6 +49,11 @@ export default (routeConfigs, stackConfig) => {
       return state;
     }
   };
+
+  router.getScreenOptions = createConfigGetter(
+    routeConfigs,
+    stackConfig.navigationOptions
+  );
 
   return router;
 }

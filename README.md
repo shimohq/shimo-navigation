@@ -9,7 +9,8 @@
 
 ### StackRouter:
 1. 修改了 route.key 的生成规则，由之前随机生成 uuid 改为:通过 Screen.screenKey 的静态方法生成 key ，或取 routeName 作为 key(方便 goBack 指定参数) #1
-2. 禁止了具有相同 key 的 navigate 操作 #2
+2. 修改了调用 navigationOptions 生成函数时传入的 navigation prop 结构，同 #7
+3. 禁止了具有相同 key 的 navigate 操作 #2
 
 ### StackNavigator:
 1. navigator 的 dispatch 方法里面 nav state 的设置改为同步读写 #3
@@ -28,6 +29,7 @@
     ...navigation,
     position, // 转场动画的位置
     progress, // 转场动画的进度
+    index, // 当前场景在navigator中的位置
     status: {
         isActive: boolean, // 是否是当前活跃的场景
         isStale: boolean, // 是否是正在退出的场景
