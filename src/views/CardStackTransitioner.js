@@ -5,8 +5,6 @@ import Transitioner from './Transitioner';
 
 export default class extends CardStackTransitioner {
 
-  _prevProps = null;
-
   render() {
     return (
       <Transitioner
@@ -33,10 +31,6 @@ export default class extends CardStackTransitioner {
 
     let transitionTargets = [];
 
-    if (!prevProps && this._prevProps) {
-      prevProps = this._prevProps;
-    }
-
     if (prevProps) {
       const prevNavigationState = prevProps.navigation.state;
       const currentNavigationState = props.navigation.state;
@@ -47,8 +41,6 @@ export default class extends CardStackTransitioner {
         transitionTargets = [prevActiveKey, currentActiveKey]
       }
     }
-
-    this._prevProps = prevProps;
 
     return (
       <CardStack

@@ -67,6 +67,21 @@ export default class extends CardStack {
     };
   }
 
+  componentWillReceiveProps(props: Props) {
+    if (props.screenProps !== this.props.screenProps) {
+      this._screenDetails = {};
+    }
+    props.scenes.forEach((newScene: *) => {
+      if (
+        this._screenDetails[newScene.key] &&
+        this._screenDetails[newScene.key].state !== newScene.route &&
+        !newScene.isStale
+      ) {
+        this._screenDetails[newScene.key] = null;
+      }
+    });
+  }
+
   _getScreenDetails = (scene) => {
     const { screenProps, navigation, position, progress, router, transitionTargets } = this.props;
     let screenDetails = this._screenDetails[scene.key];
@@ -90,15 +105,21 @@ export default class extends CardStack {
       this._screenDetails[scene.key] = screenDetails;
     }
 
-    screenDetails.navigation.status = {
-      isActive: scene.isActive,
-      isStale: scene.isStale,
-      isResponding: scene.isActive ? this.state.isResponding : false,
-      isFocusing: focusInto === navigation.state.key,
-      isBlurring: blurFrom === navigation.state.key
-    };
+    const activeKey = navigation.state.routes[navigation.state.index].key;
 
-    return screenDetails;
+    return {
+      ...screenDetails,
+      navigation: {
+        ...screenDetails.navigation,
+        status: {
+          isActive: scene.isActive,
+          isStale: scene.isStale,
+          isResponding: scene.isActive ? this.state.isResponding : false,
+          isFocusing: focusInto === activeKey,
+          isBlurring: blurFrom === activeKey
+        }
+      }
+    };
   }
 
   _getSceneMode(key) {
@@ -115,9 +136,7 @@ export default class extends CardStack {
   /**
    * Enable specify the mode in screen options
    */
-  _renderCard = (scene) => {
-    const isModal = this._getSceneMode(scene.key) === 'modal';
-
+  _renderCard = (scene, isModal) => {
     const { screenInterpolator } = TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       {},
@@ -149,8 +168,24 @@ export default class extends CardStack {
     if (headerMode === 'float') {
       floatingHeader = this._renderHeader(this.props.scene, headerMode);
     }
+
     const { navigation, position, layout, scene, scenes } = this.props;
-    const mode = this._getSceneMode(scene.key);
+    const { options } = this._getScreenDetails(scene);
+
+    let transitionScene = scene;
+
+    scenes.every(function (s) {
+      if (s.isStale) {
+        transitionScene = s;
+        return false;
+      } else if (s.isActive) {
+        transitionScene = s;
+      }
+
+      return true;
+    });
+
+    const mode = this._getSceneMode(transitionScene.key);
     const { index } = navigation.state;
     const isVertical = mode === 'modal';
 
@@ -274,8 +309,6 @@ export default class extends CardStack {
       },
     });
 
-    const { options } = this._getScreenDetails(scene);
-
     let gesturesEnabled = false;
     // Only the top most navigator can set handlers
     if (isTopMostScene(scene)) {
@@ -289,7 +322,7 @@ export default class extends CardStack {
     return (
       <View {...handlers} style={styles.container}>
         <View style={styles.scenes}>
-          {scenes.map((s: *) => this._renderCard(s))}
+          {scenes.map((s: *) => this._renderCard(s, isVertical))}
         </View>
         {floatingHeader}
       </View>
