@@ -105,7 +105,7 @@ export default class extends CardStack {
       this._screenDetails[scene.key] = screenDetails;
     }
 
-    const activeKey = navigation.state.routes[navigation.state.index].key;
+    const sceneKey = scene.route.key;
 
     return {
       ...screenDetails,
@@ -115,8 +115,8 @@ export default class extends CardStack {
           isActive: scene.isActive,
           isStale: scene.isStale,
           isResponding: scene.isActive ? this.state.isResponding : false,
-          isFocusing: focusInto === activeKey,
-          isBlurring: blurFrom === activeKey
+          isFocusing: focusInto === sceneKey,
+          isBlurring: blurFrom === sceneKey
         }
       }
     };
