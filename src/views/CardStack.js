@@ -144,7 +144,7 @@ export default class extends CardStack {
       isModal
     );
     const style =
-      screenInterpolator && screenInterpolator({ ...this.props, scene });
+      screenInterpolator && screenInterpolator({ ...this.props, scene }, isModal);
 
     const SceneComponent = this.props.router.getComponentForRouteName(
       scene.route.routeName
