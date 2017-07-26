@@ -5,6 +5,7 @@ import CardStack from 'react-navigation/src/views/CardStack';
 import SceneView from 'react-navigation/src/views/SceneView';
 import TransitionConfigs from 'react-navigation/src/views/TransitionConfigs';
 import clamp from 'clamp';
+import Header from './Header';
 
 /**
  * The max duration of the card animation in milliseconds after released gesture.
@@ -161,6 +162,26 @@ export default class extends CardStack {
       </Card>
     );
   };
+
+    _renderHeader(scene, headerMode) {
+        const { header } = this._getScreenDetails(scene).options;
+        if (typeof header !== 'undefined' && typeof header !== 'function') {
+            return header;
+        }
+
+        const renderHeader = header || ((props) => <Header {...props} />);
+
+        // We need to explicitly exclude `mode` since Flow doesn't see
+        // mode: headerMode override below and reports prop mismatch
+        const { mode, ...passProps } = this.props;
+
+        return renderHeader({
+            ...passProps,
+            scene,
+            mode: headerMode,
+            getScreenDetails: this._getScreenDetails,
+        });
+    }
 
   render() {
     let floatingHeader = null;
