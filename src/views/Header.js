@@ -4,7 +4,6 @@ import Header from 'react-navigation/src/views/Header';
 import { Platform } from 'react-native';
 import HeaderStyleInterpolator from 'react-navigation/src/views/HeaderStyleInterpolator';
 
-
 export default class extends Header {
   _renderTitle(props, options) {
     const style = {};
@@ -19,7 +18,7 @@ export default class extends Header {
         style.right = 0;
       }
     }
-      
+
     return this._renderSubView(
       { ...props, style },
       'title',
