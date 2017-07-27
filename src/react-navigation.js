@@ -3,7 +3,7 @@ const reactNavigation = require('react-navigation');
 module.exports = {
   // Core
   get createNavigationContainer() {
-    return reactNavigation.createNavigationContainer;
+    return require('./createNavigationContainer').default;
   },
   get StateUtils() {
     return reactNavigation.StateUtils;

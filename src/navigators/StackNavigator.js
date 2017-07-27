@@ -1,9 +1,10 @@
 import React from 'react';
-import { createNavigator, createNavigationContainer } from 'react-navigation';
+import { createNavigator } from 'react-navigation';
 import NavigatorTypes from 'react-navigation/src/navigators/NavigatorTypes';
 
 import StackRouter from '../routers/StackRouter';
 import CardStackTransitioner from '../views/CardStackTransitioner';
+import createNavigationContainer from '../createNavigationContainer';
 
 export default (
   routeConfigMap,
@@ -49,31 +50,5 @@ export default (
     )
   });
 
-  const NavigationContainer = createNavigationContainer(navigator, stackConfig.containerOptions);
-
-  return class extends NavigationContainer {
-    _nav = null;
-
-    // dispatch synchronously
-    dispatch = (action) => {
-      if (!this._isStateful()) {
-        return false;
-      }
-
-      if (!this._nav) {
-        this._nav = this.state.nav;
-      }
-
-      const nav = navigator.router.getStateForAction(action, this._nav);
-
-      if (nav && nav !== this._nav) {
-        this.setState({ nav }, () =>
-          this._onNavigationStateChange(this._nav, nav, action)
-        );
-        this._nav = nav;
-        return true;
-      }
-      return false;
-    };
-  };
+  return createNavigationContainer(navigator, stackConfig.containerOptions);
 };
