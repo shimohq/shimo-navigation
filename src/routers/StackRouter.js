@@ -24,10 +24,16 @@ export default (routeConfigs, stackConfig) => {
       )) {
       const key = getScreenKey(router, passedAction.routeName, passedAction.params);
       if (state.routes.some((route) => route.key === key)) {
-        console.log(`Duplicated route('${passedAction.routeName}') navigating has been ignored`);
-        return {
-          ...state
-        };
+        if (passedAction.params) {
+          return router.getStateForAction(NavigationActions.setParams({
+            key,
+            params: passedAction.params
+          }), state);
+        } else {
+          return {
+            ...state
+          };
+        }
       }
     }
 
