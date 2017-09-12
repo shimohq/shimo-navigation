@@ -146,7 +146,7 @@ export default class extends CardStack {
     );
     const style =
       screenInterpolator && screenInterpolator({ ...this.props, scene }, isModal);
-
+    const { cardStyle } = this._getScreenDetails(scene).options;
     const SceneComponent = this.props.router.getComponentForRouteName(
       scene.route.routeName
     );
@@ -155,7 +155,7 @@ export default class extends CardStack {
       <Card
         {...this.props}
         key={`card_${scene.key}`}
-        style={[style, this.props.cardStyle]}
+        style={[style, this.props.cardStyle, cardStyle]}
         scene={scene}
       >
         {this._renderInnerScene(SceneComponent, scene)}
@@ -163,25 +163,25 @@ export default class extends CardStack {
     );
   };
 
-    _renderHeader(scene, headerMode) {
-        const { header } = this._getScreenDetails(scene).options;
-        if (typeof header !== 'undefined' && typeof header !== 'function') {
-            return header;
-        }
-
-        const renderHeader = header || ((props) => <Header {...props} />);
-
-        // We need to explicitly exclude `mode` since Flow doesn't see
-        // mode: headerMode override below and reports prop mismatch
-        const { mode, ...passProps } = this.props;
-
-        return renderHeader({
-            ...passProps,
-            scene,
-            mode: headerMode,
-            getScreenDetails: this._getScreenDetails,
-        });
+  _renderHeader(scene, headerMode) {
+    const { header } = this._getScreenDetails(scene).options;
+    if (typeof header !== 'undefined' && typeof header !== 'function') {
+      return header;
     }
+
+    const renderHeader = header || ((props) => <Header {...props} />);
+
+    // We need to explicitly exclude `mode` since Flow doesn't see
+    // mode: headerMode override below and reports prop mismatch
+    const { mode, ...passProps } = this.props;
+
+    return renderHeader({
+      ...passProps,
+      scene,
+      mode: headerMode,
+      getScreenDetails: this._getScreenDetails,
+    });
+  }
 
   render() {
     let floatingHeader = null;
