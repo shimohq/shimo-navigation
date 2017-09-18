@@ -90,6 +90,7 @@ export default class extends Transitioner {
         position.setValue(nextNavigationState.index);
         progress.setValue(1);
         this._queuedTransition = null;
+        this._onTransitionEnd();
       });
     } else {
       super._startTransition(nextProps, nextScenes, indexHasChanged);

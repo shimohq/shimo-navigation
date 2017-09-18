@@ -137,13 +137,22 @@ export default class extends CardStack {
   /**
    * Enable specify the mode in screen options
    */
-  _renderCard = (scene, isModal) => {
-    const { screenInterpolator } = TransitionConfigs.getTransitionConfig(
+  _renderCard = (scene, mode) => {
+    const isModal = mode === 'modal';
+    const isStatic = mode === 'static';
+    const screenInterpolator = isStatic ? null : TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       {},
       {},
       isModal
-    );
+    ).screenInterpolator;
+
+    // fix an Animated Value bug by force reset the value
+    if (isStatic) {
+      const { position } = this.props;
+      position.setValue(position.__getValue());
+    }
+
     const style =
       screenInterpolator && screenInterpolator({ ...this.props, scene }, isModal);
     const { cardStyle } = this._getScreenDetails(scene).options;
@@ -209,8 +218,18 @@ export default class extends CardStack {
     const mode = this._getSceneMode(transitionScene.key);
     const { index } = navigation.state;
     const isVertical = mode === 'modal';
+    const isStatic = mode === 'static';
 
-    const responder = PanResponder.create({
+
+    let gesturesEnabled = false;
+    // Only the top most navigator can set handlers
+    if (!isStatic && isTopMostScene(scene)) {
+      gesturesEnabled = typeof options.gesturesEnabled === 'boolean'
+        ? options.gesturesEnabled
+        : Platform.OS === 'ios';
+    }
+
+    const handlers = gesturesEnabled ? PanResponder.create({
       onPanResponderTerminate: () => {
         this._isResponding = false;
         this._reset(index, 0);
@@ -328,22 +347,12 @@ export default class extends CardStack {
           }
         });
       },
-    });
-
-    let gesturesEnabled = false;
-    // Only the top most navigator can set handlers
-    if (isTopMostScene(scene)) {
-      gesturesEnabled = typeof options.gesturesEnabled === 'boolean'
-        ? options.gesturesEnabled
-        : Platform.OS === 'ios';
-    }
-
-    const handlers = gesturesEnabled ? responder.panHandlers : {};
+    }).panHandlers : {};
 
     return (
       <View {...handlers} style={styles.container}>
         <View style={styles.scenes}>
-          {scenes.map((s: *) => this._renderCard(s, isVertical))}
+          {scenes.map((s: *) => this._renderCard(s, mode))}
         </View>
         {floatingHeader}
       </View>
