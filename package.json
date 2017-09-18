@@ -1,6 +1,6 @@
 {
     "name": "shimo-navigation",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "main": "./src/react-navigation",
     "description": "石墨文档 React Native App 导航系统(based on react-navigation)",
     "repository": {

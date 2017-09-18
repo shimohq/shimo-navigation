@@ -147,12 +147,6 @@ export default class extends CardStack {
       isModal
     ).screenInterpolator;
 
-    // fix an Animated Value bug by force reset the value
-    if (isStatic) {
-      const { position } = this.props;
-      position.setValue(position.__getValue());
-    }
-
     const style =
       screenInterpolator && screenInterpolator({ ...this.props, scene }, isModal);
     const { cardStyle } = this._getScreenDetails(scene).options;
