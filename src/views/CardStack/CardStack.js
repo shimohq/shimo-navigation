@@ -68,7 +68,7 @@ export default class extends CardStack {
     };
   }
 
-  componentWillReceiveProps(props: Props) {
+  componentWillReceiveProps(props) {
     if (props.screenProps !== this.props.screenProps) {
       this._screenDetails = {};
     }
@@ -180,16 +180,42 @@ export default class extends CardStack {
 
     const renderHeader = header || ((props) => <Header {...props} />);
 
-    // We need to explicitly exclude `mode` since Flow doesn't see
-    // mode: headerMode override below and reports prop mismatch
-    const { mode, ...passProps } = this.props;
-
     return renderHeader({
-      ...passProps,
+      ...this.props,
       scene,
       mode: headerMode,
       getScreenDetails: this._getScreenDetails,
     });
+  }
+
+  _renderInnerScene(
+    SceneComponent,
+    scene
+  ) {
+    const { navigation, options } = this._getScreenDetails(scene);
+    const { screenProps } = this.props;
+    const headerMode = this._getHeaderMode();
+    if (headerMode === 'screen') {
+      return (
+        <View style={[styles.container, options.contentContainerStyle]}>
+          <View style={{ flex: 1 }}>
+            <SceneView
+              screenProps={screenProps}
+              navigation={navigation}
+              component={SceneComponent}
+            />
+          </View>
+          {this._renderHeader(scene, headerMode)}
+        </View>
+      );
+    }
+    return (
+      <SceneView
+        screenProps={this.props.screenProps}
+        navigation={navigation}
+        component={SceneComponent}
+      />
+    );
   }
 
   render() {
