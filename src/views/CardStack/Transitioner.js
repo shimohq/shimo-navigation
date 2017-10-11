@@ -1,6 +1,6 @@
 import { Transitioner } from 'react-navigation';
 
-import NavigationScenesReducer from './ScenesReducer';
+import NavigationScenesReducer from '../ScenesReducer';
 
 
 function buildTransitionProps(props, state) {

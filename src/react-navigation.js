@@ -39,10 +39,10 @@ module.exports = {
 
   // Views
   get Transitioner() {
-    return require('./views/Transitioner').default;
+    return require('./views/CardStack/Transitioner').default;
   },
   get CardStack() {
-    return require('./views/CardStack').default;
+    return require('./views/CardStack/CardStack').default;
   },
   get Card() {
     return reactNavigation.Card;

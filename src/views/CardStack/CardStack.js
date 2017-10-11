@@ -1,11 +1,11 @@
 import React from 'react';
 import { Platform, StyleSheet, View, PanResponder, I18nManager } from 'react-native';
 import { Card, addNavigationHelpers } from 'react-navigation';
-import CardStack from 'react-navigation/src/views/CardStack';
+import CardStack from 'react-navigation/src/views/CardStack/CardStack';
 import SceneView from 'react-navigation/src/views/SceneView';
-import TransitionConfigs from 'react-navigation/src/views/TransitionConfigs';
+import TransitionConfigs from 'react-navigation/src/views/CardStack/TransitionConfigs';
 import clamp from 'clamp';
-import Header from './Header';
+import Header from '../Header/Header';
 
 /**
  * The max duration of the card animation in milliseconds after released gesture.

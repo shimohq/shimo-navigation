@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from 'react-navigation/src/views/Header';
+import Header from 'react-navigation/src/views/Header/Header';
 
 import { Platform } from 'react-native';
-import HeaderStyleInterpolator from 'react-navigation/src/views/HeaderStyleInterpolator';
+import HeaderStyleInterpolator from 'react-navigation/src/views/Header/HeaderStyleInterpolator';
 
 export default class extends Header {
   _renderTitle(props, options) {

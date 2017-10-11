@@ -1,5 +1,5 @@
 import React from 'react';
-import CardStackTransitioner from 'react-navigation/src/views/CardStackTransitioner';
+import CardStackTransitioner from 'react-navigation/src/views/CardStack/CardStackTransitioner';
 import CardStack from './CardStack';
 import Transitioner from './Transitioner';
 

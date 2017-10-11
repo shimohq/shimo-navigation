@@ -3,7 +3,7 @@ import { createNavigator } from 'react-navigation';
 import NavigatorTypes from 'react-navigation/src/navigators/NavigatorTypes';
 
 import StackRouter from '../routers/StackRouter';
-import CardStackTransitioner from '../views/CardStackTransitioner';
+import CardStackTransitioner from '../views/CardStack/CardStackTransitioner';
 import createNavigationContainer from '../createNavigationContainer';
 
 export default (
