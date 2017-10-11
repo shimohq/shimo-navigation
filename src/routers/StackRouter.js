@@ -19,8 +19,7 @@ export default (routeConfigs, stackConfig) => {
   router.getStateForAction = (passedAction, state) => {
     // Prevent route key conflicts.
     if (state && routeConfigs[passedAction.routeName] && (
-        passedAction.type === NavigationActions.NAVIGATE ||
-        passedAction.type === NavigationActions.navigate
+        passedAction.type === NavigationActions.NAVIGATE
       )) {
       const key = getScreenKey(router, passedAction.routeName, passedAction.params);
       if (state.routes.some((route) => route.key === key)) {
@@ -35,6 +34,23 @@ export default (routeConfigs, stackConfig) => {
           };
         }
       }
+    } else if (state && passedAction.type === NavigationActions.RESET) {
+      const keys = {};
+      const actions = [];
+      let counter = 0;
+      passedAction.actions.forEach((route, index) => {
+        const key = getScreenKey(router, route.routeName, route.params);
+        if (!keys.hasOwnProperty(key)) {
+          keys[key] = counter;
+          actions.push(route);
+          counter++;
+        }
+
+        if (passedAction.index === index) {
+          passedAction.index = keys[key];
+        }
+      });
+      passedAction.actions = actions;
     }
 
     const result = originGetStateForAction(passedAction, state);
@@ -44,10 +60,9 @@ export default (routeConfigs, stackConfig) => {
       return {
         ...result,
         routes: result.routes.map((route) => {
-          const key = getScreenKey(router, route.routeName, route.params);
           return {
             ...route,
-            key
+            key: getScreenKey(router, route.routeName, route.params)
           };
         })
       };
@@ -62,4 +77,4 @@ export default (routeConfigs, stackConfig) => {
   );
 
   return router;
-}
+};

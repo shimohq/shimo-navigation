@@ -1,14 +1,6 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
 import { Transitioner } from 'react-navigation';
 
 import NavigationScenesReducer from './ScenesReducer';
-
-const styles = StyleSheet.create({
-  main: {
-    flex: 1
-  }
-});
 
 
 function buildTransitionProps(props, state) {
@@ -39,7 +31,7 @@ function isSceneNotStale(scene) {
 
 export default class extends Transitioner {
 
-  componentWillReceiveProps(nextProps: Props): void {
+  componentWillReceiveProps(nextProps): void {
     const nextScenes = NavigationScenesReducer(
       this.state.scenes,
       nextProps.navigation.state,
