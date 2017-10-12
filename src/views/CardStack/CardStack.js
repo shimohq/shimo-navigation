@@ -121,7 +121,7 @@ export default class extends CardStack {
         }
       }
     };
-  }
+  };
 
   _getSceneMode(key) {
     const options = this._screenDetails[key] ? this._screenDetails[key].options : null;
@@ -149,8 +149,8 @@ export default class extends CardStack {
 
     // fix an Animated Value bug by force reset the value
     if (isStatic) {
-      const { position } = this.props;
-      position.setValue(position.__getAnimatedValue());
+      const { position, index } = this.props;
+      position.setValue(index);
     }
 
     const style =
