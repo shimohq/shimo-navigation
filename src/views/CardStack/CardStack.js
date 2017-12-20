@@ -66,21 +66,23 @@ export default class extends CardStack {
     this.state = {
       isResponding: false
     };
+
   }
 
   componentWillReceiveProps(props) {
     if (props.screenProps !== this.props.screenProps) {
       this._screenDetails = {};
     }
-    props.scenes.forEach((newScene: *) => {
-      if (
-        this._screenDetails[newScene.key] &&
-        this._screenDetails[newScene.key].state !== newScene.route &&
-        !newScene.isStale
-      ) {
-        this._screenDetails[newScene.key] = null;
-      }
-    });
+  }
+
+  componentWillUpdate(nextProps) {
+    const mode = this._getTransitionMode(nextProps);
+    // fix an Animated Value bug by force reset the value
+    if (mode === 'static') {
+      const { position, index } = nextProps;
+      position.stopAnimation();
+      position.setValue(index);
+    }
   }
 
   _getScreenDetails = (scene) => {
@@ -139,19 +141,12 @@ export default class extends CardStack {
    */
   _renderCard = (scene, mode) => {
     const isModal = mode === 'modal';
-    const isStatic = mode === 'static';
-    const screenInterpolator = isStatic ? null : TransitionConfigs.getTransitionConfig(
+    const screenInterpolator = mode === 'static' ? null : TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       {},
       {},
       isModal
     ).screenInterpolator;
-
-    // fix an Animated Value bug by force reset the value
-    if (isStatic) {
-      const { position, index } = this.props;
-      position.setValue(index);
-    }
 
     const style =
       screenInterpolator && screenInterpolator({ ...this.props, scene }, isModal);
@@ -218,16 +213,7 @@ export default class extends CardStack {
     );
   }
 
-  render() {
-    let floatingHeader = null;
-    const headerMode = this._getHeaderMode();
-    if (headerMode === 'float') {
-      floatingHeader = this._renderHeader(this.props.scene, headerMode);
-    }
-
-    const { navigation, position, layout, scene, scenes } = this.props;
-    const { options } = this._getScreenDetails(scene);
-
+  _getTransitionMode({ scene, scenes }) {
     let transitionScene = scene;
 
     scenes.every(function (s) {
@@ -241,15 +227,25 @@ export default class extends CardStack {
       return true;
     });
 
-    const mode = this._getSceneMode(transitionScene.key);
+    return this._getSceneMode(transitionScene.key);
+  }
+
+  render() {
+    let floatingHeader = null;
+    const headerMode = this._getHeaderMode();
+    if (headerMode === 'float') {
+      floatingHeader = this._renderHeader(this.props.scene, headerMode);
+    }
+
+    const { navigation, position, layout, scene, scenes } = this.props;
+    const { options } = this._getScreenDetails(scene);
+    const mode = this._getTransitionMode(this.props);
     const { index } = navigation.state;
     const isVertical = mode === 'modal';
-    const isStatic = mode === 'static';
-
 
     let gesturesEnabled = false;
     // Only the top most navigator can set handlers
-    if (!isStatic && isTopMostScene(scene)) {
+    if (mode !== 'static' && isTopMostScene(scene)) {
       gesturesEnabled = typeof options.gesturesEnabled === 'boolean'
         ? options.gesturesEnabled
         : Platform.OS === 'ios';

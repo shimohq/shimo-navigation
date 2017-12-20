@@ -32,12 +32,12 @@ export default class extends CardStackTransitioner {
     let transitionTargets = [];
 
     if (prevProps) {
-      const prevNavigationState = prevProps.navigation.state;
-      const currentNavigationState = props.navigation.state;
-      const prevActiveKey = prevNavigationState.routes[prevNavigationState.index].key;
-      const currentActiveKey = currentNavigationState.routes[currentNavigationState.index].key;
+      // const prevNavigationState = prevProps.navigation.state;
+      // const currentNavigationState = props.navigation.state;
+      // const prevActiveKey = prevNavigationState.routes[prevProps.index].key;
+      // const currentActiveKey = currentNavigationState.routes[currentNavigationState.index].key;
 
-      if (prevActiveKey !== currentActiveKey) {
+      if (prevProps.scenes[prevProps.index].key !== props.scenes[props.index].key) {
         transitionTargets = [prevActiveKey, currentActiveKey]
       }
     }
