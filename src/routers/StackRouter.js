@@ -133,11 +133,19 @@ export default (routeConfigs, stackConfig) => {
       }
       let key = getScreenKey(route.routeName, route.params);
       route.key = key;
+      const index = StateUtils.indexOf(state, key);
+      if (index !== -1) {
+        if (route.routeName === initialRouteName && initialRouteParams && !index) {
+          route.params = {
+            ...initialRouteParams,
+            ...route.params
+          };
+        }
 
-      if (StateUtils.indexOf(state, route.key) !== -1) {
-        return StateUtils.replaceAt(state, route.key, route);
+        return StateUtils.replaceAt(state, key, route);
+      } else {
+        return StateUtils.push(state, route);
       }
-      return StateUtils.push(state, route);
     }
 
     // Handle navigation to other child routers that are not yet pushed
@@ -171,11 +179,18 @@ export default (routeConfigs, stackConfig) => {
             };
             const key = getScreenKey(route.routeName, route.params);
             route.key = key;
-            
-            if (StateUtils.indexOf(state, route.key) !== -1) {
-              return StateUtils.replaceAt(state, route.key, route);
+            const index = StateUtils.indexOf(state, key);
+            if (index !== -1) {
+              if (route.routeName === initialRouteName && initialRouteParams && !index) {
+                route.params = {
+                  ...initialRouteParams,
+                  ...route.params
+                };
+              }
+              return StateUtils.replaceAt(state, key, route);
+            } else {
+              return StateUtils.push(state, route);
             }
-            return StateUtils.push(state, route);
           }
         }
       }
