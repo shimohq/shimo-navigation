@@ -31,7 +31,7 @@ function isSceneNotStale(scene) {
 
 export default class extends Transitioner {
 
-  componentWillReceiveProps(nextProps): void {
+  componentWillReceiveProps(nextProps) {
     const nextScenes = NavigationScenesReducer(
       this.state.scenes,
       nextProps.navigation.state,
@@ -87,6 +87,37 @@ export default class extends Transitioner {
     } else {
       super._startTransition(nextProps, nextScenes, indexHasChanged);
     }
+  }
+
+  _onTransitionEnd() {
+    if (!this._isMounted) {
+      return;
+    }
+    const prevTransitionProps = this._prevTransitionProps;
+    this._prevTransitionProps = null;
+
+    const nextState = {
+      ...this.state,
+      scenes: this.state.scenes.filter(isSceneNotStale),
+    };
+
+    this._transitionProps = buildTransitionProps(this.props, nextState);
+
+    this.setState(nextState, () => {
+      this.props.onTransitionEnd &&
+      this.props.onTransitionEnd(this._transitionProps, prevTransitionProps);
+      if (this._queuedTransition) {
+        this._startTransition(
+          this._queuedTransition.nextProps,
+          // Modified here, filter stale scene after transitionEnd.
+          this._queuedTransition.nextScenes.filter(isSceneNotStale),
+          this._queuedTransition.indexHasChanged
+        );
+        this._queuedTransition = null;
+      } else {
+        this._isTransitionRunning = false;
+      }
+    });
   }
 
 }
