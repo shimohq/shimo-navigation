@@ -47,6 +47,7 @@ export default class extends Transitioner {
       nextProps.navigation.state.index !== this.props.navigation.state.index;
     if (this._isTransitionRunning) {
       this._queuedTransition = { nextProps, nextScenes, indexHasChanged };
+      return;
     }
 
     this._startTransition(nextProps, nextScenes, indexHasChanged);
@@ -82,7 +83,7 @@ export default class extends Transitioner {
         this._queuedTransition = null;
         this._onTransitionEnd();
       });
-    } else {
+    } else if (!this._isTransitionRunning) {
       super._startTransition(nextProps, nextScenes, indexHasChanged);
     }
   }
@@ -104,6 +105,7 @@ export default class extends Transitioner {
     this.setState(nextState, () => {
       this.props.onTransitionEnd &&
       this.props.onTransitionEnd(this._transitionProps, prevTransitionProps);
+      this._isTransitionRunning = false;
       if (this._queuedTransition) {
         this._startTransition(
           this._queuedTransition.nextProps,
@@ -112,8 +114,6 @@ export default class extends Transitioner {
           this._queuedTransition.indexHasChanged
         );
         this._queuedTransition = null;
-      } else {
-        this._isTransitionRunning = false;
       }
     });
   }
