@@ -47,9 +47,7 @@ export default class extends Transitioner {
       nextProps.navigation.state.index !== this.props.navigation.state.index;
     if (this._isTransitionRunning) {
       this._queuedTransition = { nextProps, nextScenes, indexHasChanged };
-      return;
     }
-
 
     this._startTransition(nextProps, nextScenes, indexHasChanged);
   }
