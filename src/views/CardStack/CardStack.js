@@ -148,9 +148,9 @@ export default class extends CardStack {
       isModal
     ).screenInterpolator;
 
+    const { options } = this._getScreenDetails(scene);
     const style =
-      screenInterpolator && screenInterpolator({ ...this.props, scene }, isModal);
-    const { cardStyle } = this._getScreenDetails(scene).options;
+      screenInterpolator && screenInterpolator({ ...this.props, scene }, options);
     const SceneComponent = this.props.router.getComponentForRouteName(
       scene.route.routeName
     );
@@ -159,7 +159,7 @@ export default class extends CardStack {
       <Card
         {...this.props}
         key={`card_${scene.key}`}
-        style={[style, this.props.cardStyle, cardStyle]}
+        style={[style, this.props.cardStyle, options.cardStyle]}
         scene={scene}
       >
         {this._renderInnerScene(SceneComponent, scene)}
