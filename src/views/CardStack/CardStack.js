@@ -150,7 +150,7 @@ export default class extends CardStack {
 
     const { options } = this._getScreenDetails(scene);
     const style =
-      screenInterpolator && screenInterpolator({ ...this.props, scene }, options);
+      screenInterpolator && screenInterpolator({ ...this.props, scene }, isModal, options);
     const SceneComponent = this.props.router.getComponentForRouteName(
       scene.route.routeName
     );
