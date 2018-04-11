@@ -131,6 +131,14 @@ export default (routeConfigs, stackConfig) => {
           routeName: action.routeName,
         };
       }
+      const getDefaultParams = routeConfigs[action.routeName].getDefaultParams;
+      if (getDefaultParams) {
+        route.params = {
+          ...getDefaultParams(),
+          ...route.params
+        };
+      }
+
       let key = getScreenKey(route.routeName, route.params);
       route.key = key;
       const index = StateUtils.indexOf(state, key);
