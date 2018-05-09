@@ -141,16 +141,27 @@ export default class extends CardStack {
    */
   _renderCard = (scene, mode) => {
     const isModal = mode === 'modal';
-    const screenInterpolator = mode === 'static' ? null : TransitionConfigs.getTransitionConfig(
+
+    let screenInterpolator = mode === 'static' ? null : TransitionConfigs.getTransitionConfig(
       this.props.transitionConfig,
       {},
       {},
       isModal
     ).screenInterpolator;
 
+    // mock interpolator, props.position.interpolate usage is required.
+    screenInterpolator = screenInterpolator || function (props) {
+      const scale = props.position.interpolate({
+        inputRange: [0, 1],
+        outputRange: [1, 1]
+      })
+      return {
+        transform: [{ scale }]
+      }
+    };
+
     const { options } = this._getScreenDetails(scene);
-    const style =
-      screenInterpolator && screenInterpolator({ ...this.props, scene }, isModal, options);
+    const style = screenInterpolator({ ...this.props, scene }, isModal, options);
     const SceneComponent = this.props.router.getComponentForRouteName(
       scene.route.routeName
     );
