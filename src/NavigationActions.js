@@ -12,5 +12,6 @@ const remove = createAction(REMOVE);
 
 export default {
   ...NavigationActions,
+  REMOVE,
   remove
 }

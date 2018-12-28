@@ -92,7 +92,7 @@ export default (routeConfigs, stackConfig) => {
     }
 
     // remove some route from state
-    if (action.type === NavigationActions.remove) {
+    if (action.type === NavigationActions.REMOVE) {
       if (state.routes) {
         const { key } = action;
         const routes = state.routes.slice();
