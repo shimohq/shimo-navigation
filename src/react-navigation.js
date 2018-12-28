@@ -12,7 +12,7 @@ module.exports = {
     return reactNavigation.addNavigationHelpers;
   },
   get NavigationActions() {
-    return reactNavigation.NavigationActions;
+    return require('./NavigationActions').default;
   },
 
   // Navigators

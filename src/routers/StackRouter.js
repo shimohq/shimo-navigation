@@ -1,4 +1,5 @@
-import { StackRouter, NavigationActions } from 'react-navigation';
+import { StackRouter } from 'react-navigation';
+import NavigationActions from '../NavigationActions';
 import createConfigGetter from './createConfigGetter';
 import getScreenForRouteName from 'react-navigation/src/routers/getScreenForRouteName';
 import StateUtils from 'react-navigation/src/StateUtils';
@@ -88,6 +89,33 @@ export default (routeConfigs, stackConfig) => {
         index: 0,
         routes: [route],
       };
+    }
+
+    // remove some route from state
+    if (action.type === NavigationActions.remove) {
+      if (state.routes) {
+        const { key } = action;
+        const routes = state.routes.slice();
+  
+        for (let i = 0; i < routes.length; i++) {
+          const route = routes[i];
+          if (route.key === key) {
+            routes.splice(i, 1);
+            let index = i <= state.index ? state.index - 1 : state.index;
+            return {
+              ...state,
+              routes,
+              index
+            };
+          }
+        }
+        return {
+          ...state,
+          routes: routes.map(route => navigation(route, action))
+        };
+      } else {
+        return state;
+      }
     }
 
     // Check if a child scene wants to handle the action as long as it is not a reset to the root stack
