@@ -111,7 +111,10 @@ export default (routeConfigs, stackConfig) => {
         }
         return {
           ...state,
-          routes: routes.map(route => navigation(route, action))
+          routes: routes.map(route => {
+            const childRouter = childRouters[route.routeName];
+            return childRouter ? childRouter.getStateForAction(action, route) : route;
+          })
         };
       } else {
         return state;
