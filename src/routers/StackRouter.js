@@ -307,6 +307,31 @@ export default (routeConfigs, stackConfig) => {
         };
       }
     }
+
+    if (action.type === NavigationActions.REPLACE) {
+        const replace = (routes) => {
+            if (!routes || !routes.length) {
+                return false;
+            }
+            const replaceIndex = routes.findIndex(({ key }) => key === action.key);
+            if (replaceIndex !== -1) {
+                routes[replaceIndex] = action.route;
+                return true;
+            }
+            return routes.some(({ routes }) => {
+                const replaced = replace(routes);
+                return replaced;
+            });
+        };
+        const routes = JSON.parse(JSON.stringify(state.routes)); ;
+        const replaced = replace(routes);
+        if (replaced) {
+            return {
+                ...state,
+                routes
+            }
+        }
+    }
     return state;
   };
 
