@@ -71,9 +71,12 @@ export default (routeConfigs, stackConfig) => {
           })
         );
       }
-      const params = (route.params ||
+      const getDefaultParams = routeConfigs[initialRouteName].getDefaultParams;
+      const params = (getDefaultParams ||
+        route.params ||
         action.params ||
         initialRouteParams) && {
+          ...(getDefaultParams && getDefaultParams() || {}),
           ...(route.params || {}),
           ...(action.params || {}),
           ...(initialRouteParams || {}),
@@ -319,16 +322,17 @@ export default (routeConfigs, stackConfig) => {
                 return true;
             }
             return routes.some(({ routes }) => {
-                const replaced = replace(routes);
-                return replaced;
+                return replace(routes);
             });
         };
-        const routes = JSON.parse(JSON.stringify(state.routes)); ;
-        const replaced = replace(routes);
-        if (replaced) {
-            return {
-                ...state,
-                routes
+        if (state.routes) {
+            const routes = [...state.routes];
+            const replaced = replace(routes);
+            if (replaced) {
+                return {
+                    ...state,
+                    routes
+                }
             }
         }
     }
