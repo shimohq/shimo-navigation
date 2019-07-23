@@ -71,9 +71,12 @@ export default (routeConfigs, stackConfig) => {
           })
         );
       }
-      const params = (route.params ||
+      const getDefaultParams = routeConfigs[initialRouteName].getDefaultParams;
+      const params = (getDefaultParams ||
+        route.params ||
         action.params ||
         initialRouteParams) && {
+          ...(getDefaultParams && getDefaultParams() || {}),
           ...(route.params || {}),
           ...(action.params || {}),
           ...(initialRouteParams || {}),
